@@ -14,6 +14,8 @@ import {
   X
 } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const Dashboard = ({ token, username, onLogout, refreshData }) => {
   const [activeTab, setActiveTab] = useState('messages');
   const [loading, setLoading] = useState(false);
@@ -45,11 +47,11 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
     setLoading(true);
     try {
       const [msgRes, skillRes, projRes, expRes, eduRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/messages', axiosConfig),
-        axios.get('http://localhost:5000/api/skills'),
-        axios.get('http://localhost:5000/api/projects'),
-        axios.get('http://localhost:5000/api/experience'),
-        axios.get('http://localhost:5000/api/education')
+        axios.get(`${API_BASE_URL}/api/messages`, axiosConfig),
+        axios.get(`${API_BASE_URL}/api/skills`),
+        axios.get(`${API_BASE_URL}/api/projects`),
+        axios.get(`${API_BASE_URL}/api/experience`),
+        axios.get(`${API_BASE_URL}/api/education`)
       ]);
 
       setMessages(msgRes.data);
@@ -78,7 +80,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
   const deleteMessage = async (id) => {
     if (!window.confirm('Delete this message?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/messages/${id}`, axiosConfig);
+      await axios.delete(`${API_BASE_URL}/api/messages/${id}`, axiosConfig);
       setMessages(messages.filter(m => m._id !== id));
       showFeedback('success', 'Message deleted successfully.');
     } catch (err) {
@@ -91,7 +93,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
     e.preventDefault();
     if (!skillForm.name) return;
     try {
-      const res = await axios.post('http://localhost:5000/api/skills', skillForm, axiosConfig);
+      const res = await axios.post(`${API_BASE_URL}/api/skills`, skillForm, axiosConfig);
       setSkills([...skills, res.data]);
       setSkillForm({ name: '', category: skillForm.category });
       showFeedback('success', 'Skill added!');
@@ -103,7 +105,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
 
   const deleteSkill = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/skills/${id}`, axiosConfig);
+      await axios.delete(`${API_BASE_URL}/api/skills/${id}`, axiosConfig);
       setSkills(skills.filter(s => s._id !== id));
       showFeedback('success', 'Skill deleted.');
       refreshData();
@@ -131,13 +133,13 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
     try {
       if (editingProjectId) {
         // Edit
-        const res = await axios.put(`http://localhost:5000/api/projects/${editingProjectId}`, projectForm, axiosConfig);
+        const res = await axios.put(`${API_BASE_URL}/api/projects/${editingProjectId}`, projectForm, axiosConfig);
         setProjects(projects.map(p => p._id === editingProjectId ? res.data : p));
         setEditingProjectId(null);
         showFeedback('success', 'Project updated successfully!');
       } else {
         // Add
-        const res = await axios.post('http://localhost:5000/api/projects', projectForm, axiosConfig);
+        const res = await axios.post(`${API_BASE_URL}/api/projects`, projectForm, axiosConfig);
         setProjects([res.data, ...projects]);
         showFeedback('success', 'Project added successfully!');
       }
@@ -163,7 +165,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
   const deleteProject = async (id) => {
     if (!window.confirm('Delete this project?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/projects/${id}`, axiosConfig);
+      await axios.delete(`${API_BASE_URL}/api/projects/${id}`, axiosConfig);
       setProjects(projects.filter(p => p._id !== id));
       showFeedback('success', 'Project removed.');
       refreshData();
@@ -180,13 +182,13 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
     try {
       if (editingExpId) {
         // Edit
-        const res = await axios.put(`http://localhost:5000/api/experience/${editingExpId}`, expForm, axiosConfig);
+        const res = await axios.put(`${API_BASE_URL}/api/experience/${editingExpId}`, expForm, axiosConfig);
         setExperience(experience.map(exp => exp._id === editingExpId ? res.data : exp));
         setEditingExpId(null);
         showFeedback('success', 'Experience record updated!');
       } else {
         // Add
-        const res = await axios.post('http://localhost:5000/api/experience', expForm, axiosConfig);
+        const res = await axios.post(`${API_BASE_URL}/api/experience`, expForm, axiosConfig);
         setExperience([...experience, res.data]);
         showFeedback('success', 'Experience record added!');
       }
@@ -211,7 +213,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
   const deleteExperience = async (id) => {
     if (!window.confirm('Delete this experience?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/experience/${id}`, axiosConfig);
+      await axios.delete(`${API_BASE_URL}/api/experience/${id}`, axiosConfig);
       setExperience(experience.filter(e => e._id !== id));
       showFeedback('success', 'Experience removed.');
       refreshData();
@@ -228,13 +230,13 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
     try {
       if (editingEduId) {
         // Edit
-        const res = await axios.put(`http://localhost:5000/api/education/${editingEduId}`, eduForm, axiosConfig);
+        const res = await axios.put(`${API_BASE_URL}/api/education/${editingEduId}`, eduForm, axiosConfig);
         setEducation(education.map(edu => edu._id === editingEduId ? res.data : edu));
         setEditingEduId(null);
         showFeedback('success', 'Education record updated!');
       } else {
         // Add
-        const res = await axios.post('http://localhost:5000/api/education', eduForm, axiosConfig);
+        const res = await axios.post(`${API_BASE_URL}/api/education`, eduForm, axiosConfig);
         setEducation([...education, res.data]);
         showFeedback('success', 'Education record added!');
       }
@@ -259,7 +261,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
   const deleteEducation = async (id) => {
     if (!window.confirm('Delete this education record?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/education/${id}`, axiosConfig);
+      await axios.delete(`${API_BASE_URL}/api/education/${id}`, axiosConfig);
       setEducation(education.filter(edu => edu._id !== id));
       showFeedback('success', 'Education record removed.');
       refreshData();

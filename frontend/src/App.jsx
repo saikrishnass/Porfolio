@@ -62,12 +62,13 @@ const App = () => {
 
   const fetchPortfolioData = async () => {
     setLoading(true);
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     try {
       const [skillRes, projRes, expRes, eduRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/skills'),
-        axios.get('http://localhost:5000/api/projects'),
-        axios.get('http://localhost:5000/api/experience'),
-        axios.get('http://localhost:5000/api/education')
+        axios.get(`${API_BASE_URL}/api/skills`),
+        axios.get(`${API_BASE_URL}/api/projects`),
+        axios.get(`${API_BASE_URL}/api/experience`),
+        axios.get(`${API_BASE_URL}/api/education`)
       ]);
 
       setSkills(skillRes.data);
