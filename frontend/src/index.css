@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    scroll-behavior: smooth;
+}
+
+html.scroll-snap-active {
+    scroll-snap-type: y mandatory;
+}
+
+body {
+    background-color: #000000;
+    color: #e5e2e1;
+    overflow-x: hidden;
+}
+
+.scroll-snap-active section,
+.scroll-snap-active footer {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nav-underline {
+    position: relative;
+}
+
+.nav-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -4px;
+    left: 50%;
+    background-color: #1428A0;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-underline:hover::after,
+.nav-active::after {
+    width: 100%;
+}
+
+.glass-card {
+    background: rgba(8, 8, 8, 0.6);
+    backdrop-filter: blur(-20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.project-card:hover .project-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.project-overlay {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 3D Tilt Hover effect */
+.tilt-card {
+    --rotate-x: 0deg;
+    --rotate-y: 0deg;
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+}
+
+.tilt-card.tilt-reset {
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.tilt-card-inner {
+    transform: perspective(1000px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+    transform-style: preserve-3d;
+}
+
+/* Experience Timeline Indicator */
+#experience-indicator {
+    transition: top 0.1s ease-out;
+}
+
+.experience-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.experience-item.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Custom Scrollbar for modern feel */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1428A0;
+}

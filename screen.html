@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MCODE - Full Stack Developer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Sora:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-on-surface": "#313030",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container": "#201f1f",
+                        "background": "#131313",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-tertiary": "#2f3131",
+                        "inverse-primary": "#4152c5",
+                        "outline": "#8f8f9f",
+                        "tertiary": "#c6c6c7",
+                        "surface-dim": "#131313",
+                        "error": "#ffb4ab",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary": "#011a97",
+                        "outline-variant": "#454653",
+                        "electric-blue": "#1428A0",
+                        "surface-bright": "#393939",
+                        "surface-variant": "#353534",
+                        "primary": "#bcc3ff",
+                        "surface-tint": "#bcc3ff",
+                        "secondary-container": "#474747",
+                        "primary-fixed": "#dfe0ff",
+                        "on-primary-fixed": "#000d60",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "tertiary-container": "#383a3a",
+                        "surface": "#131313",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "inverse-surface": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed": "#1b1b1b",
+                        "primary-container": "#1428a0",
+                        "secondary-fixed-dim": "#c6c6c6",
+                        "on-primary-container": "#8f9cff",
+                        "on-error": "#690005",
+                        "on-background": "#e5e2e1",
+                        "soft-gray": "#A1A1A6",
+                        "on-secondary-container": "#b5b5b5",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-surface-variant": "#c5c5d5",
+                        "secondary": "#c6c6c6",
+                        "deep-obsidian": "#080808",
+                        "glass-border": "rgba(255, 255, 255, 0.12)",
+                        "primary-fixed-dim": "#bcc3ff",
+                        "on-surface": "#e5e2e1",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary": "#303030",
+                        "surface-container-highest": "#353534",
+                        "on-tertiary-container": "#a3a4a4",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary-fixed-variant": "#2638ad"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "section-gap": "160px",
+                        "margin-desktop": "80px",
+                        "unit": "8px",
+                        "margin-mobile": "24px",
+                        "gutter": "24px",
+                        "container-max": "1440px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-xl-mobile": ["Sora"],
+                        "headline-lg": ["Sora"],
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Sora"],
+                        "display-xl": ["Sora"]
+                    },
+                    fontSize: {
+                        "body-md": ["16px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+                        "body-lg": ["20px", { lineHeight: "30px", letterSpacing: "0em", fontWeight: "400" }],
+                        "display-xl-mobile": ["48px", { lineHeight: "52px", letterSpacing: "-0.03em", fontWeight: "700" }],
+                        "headline-lg": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }],
+                        "headline-lg-mobile": ["32px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "display-xl": ["80px", { lineHeight: "90px", letterSpacing: "-0.04em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .nav-underline {
+            position: relative;
+        }
+        .nav-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #1428A0;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-underline:hover::after, .nav-active::after {
+            width: 100%;
+        }
+        .glass-card {
+            background: rgba(8, 8, 8, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .project-card:hover .project-overlay {
+            opacity: 1;
+            transform: translateY(20px);
+        }
+        .project-overlay {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* 3D Tilt Hover effect */
+        .tilt-card {
+            --rotate-x: 0deg;
+            --rotate-y: 0deg;
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out;
+            will-change: transform;
+        }
+        .tilt-card.tilt-reset {
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .tilt-card-inner {
+            transform: perspective(1000px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+            transform-style: preserve-3d;
+        }
+
+        /* Experience Timeline Indicator */
+        #experience-indicator {
+            transition: top 0.1s ease-out;
+        }
+        .experience-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .experience-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased font-body-md selection:bg-electric-blue selection:text-white">
+<canvas height="6465" id="particle-network" width="1280"></canvas>
+<header class="absolute top-8 left-0 right-0 z-50 flex items-center justify-center w-full px-margin-mobile md:px-margin-desktop">
+<nav aria-label="Main Navigation" class="bg-background/70 backdrop-blur-xl rounded-full mx-auto max-w-fit px-8 py-4 border border-glass-border flex items-center gap-8 shadow-none">
+<a class="font-display-xl text-headline-lg-mobile tracking-tighter text-on-surface" href="#">SAIKRISHNA_P</a>
+<div class="hidden md:flex items-center gap-6 font-label-caps text-label-caps">
+<a class="text-soft-gray hover:text-electric-blue transition-colors duration-300 nav-underline" href="#about">About</a>
+<a class="text-soft-gray hover:text-electric-blue transition-colors duration-300 nav-underline" href="#skills">Skills</a>
+<a class="text-soft-gray hover:text-electric-blue transition-colors duration-300 nav-underline" href="#projects">Projects</a>
+<a class="text-soft-gray hover:text-electric-blue transition-colors duration-300 nav-underline" href="#experience">Experience</a>
+<a class="text-soft-gray hover:text-electric-blue transition-colors duration-300 nav-underline" href="#education">Education</a>
+<a class="text-soft-gray hover:text-electric-blue transition-colors duration-300 nav-underline" href="#contact">Contact</a>
+</div>
+<a class="hidden md:flex items-center justify-center font-label-caps text-label-caps text-on-surface border border-glass-border rounded-full px-6 py-2 hover:text-electric-blue hover:border-electric-blue transition-all duration-300 scale-105 ease-out" href="#">
+                Resume
+            </a>
+</nav>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+<!-- Hero Section -->
+<section class="min-h-screen flex flex-col justify-center items-start pt-32 pb-section-gap relative" id="hero">
+<div class="reveal max-w-4xl active">
+<p class="font-label-caps text-label-caps text-electric-blue mb-6 tracking-[0.2em]">MCODE // 3RD YEAR IT STUDENT</p>
+<h1 class="font-display-xl-mobile md:font-display-xl text-display-xl-mobile md:text-display-xl text-on-surface mb-8">
+                    Full Stack Developer &amp;<br/>AI Architect
+                </h1>
+<p class="font-body-lg text-body-lg text-soft-gray mb-12 max-w-2xl">
+                    Architecting intelligent systems and scalable web applications. Bridging the gap between robust backend engineering and cutting-edge artificial intelligence.
+                </p>
+<div class="flex flex-col sm:flex-row gap-6">
+<a class="inline-flex items-center justify-center bg-on-surface text-background font-label-caps text-label-caps px-8 py-4 rounded-full hover:bg-electric-blue hover:text-on-surface transition-all duration-300" href="#projects">
+                        View Projects
+                    </a>
+<a class="inline-flex items-center justify-center glass-card text-on-surface font-label-caps text-label-caps px-8 py-4 rounded-full hover:border-electric-blue hover:text-electric-blue transition-all duration-300" href="#contact">
+                        Contact Me
+                    </a>
+</div>
+</div>
+<div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-pulse">
+<span class="w-[1px] h-16 bg-glass-border mb-2"></span>
+<span class="font-label-caps text-[10px] text-soft-gray">SCROLL</span>
+</div>
+</section>
+<!-- Sticky Card System -->
+<div class="relative w-full pb-section-gap">
+<!-- About Section -->
+<section class="min-h-[120vh] relative" id="about">
+<div class="sticky top-24 h-[calc(100vh-12rem)] w-full flex items-center justify-center transform transition-transform duration-500">
+<div class="tilt-card w-full max-w-5xl h-full tilt-reset" style="--rotate-x: 0deg; --rotate-y: 0deg;">
+<div class="tilt-card-inner glass-card w-full h-full p-8 md:p-16 rounded-3xl overflow-y-auto flex flex-col justify-center shadow-2xl">
+<h2 class="font-display-xl text-headline-lg text-on-surface mb-6">About Me</h2>
+<p class="font-label-caps text-label-caps text-electric-blue mb-4 tracking-[0.2em]">3RD YEAR IT STUDENT</p>
+<p class="font-body-lg text-body-lg text-soft-gray max-w-3xl">
+                        I am a 3rd-year Information Technology student with a strong passion for full-stack development and artificial intelligence. My journey in tech involves constantly exploring new paradigms, building scalable architectures, and designing intuitive user experiences. I thrive in bridging the gap between robust backend engineering and cutting-edge artificial intelligence to solve complex problems.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Skills Section -->
+<section class="min-h-[120vh] relative" id="skills">
+<div class="sticky top-28 h-[calc(100vh-12rem)] w-full flex items-center justify-center transform transition-transform duration-500">
+<div class="tilt-card w-full max-w-5xl h-full tilt-reset" style="--rotate-x: 0deg; --rotate-y: 0deg;">
+<div class="tilt-card-inner glass-card w-full h-full p-8 md:p-16 rounded-3xl overflow-y-auto flex flex-col justify-center shadow-2xl">
+<h2 class="font-display-xl text-headline-lg text-on-surface mb-6">Technical Skills</h2>
+<p class="font-label-caps text-label-caps text-electric-blue mb-8 tracking-[0.2em]">MERN / MEAN STACK SPECIALIST</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+<div class="tilt-card tilt-reset">
+<div class="tilt-card-inner bg-surface-container/50 p-6 rounded-xl border border-glass-border hover:border-electric-blue transition-colors duration-300 h-full">
+<h3 class="font-headline-lg-mobile text-body-lg text-on-surface mb-4">Frontend</h3>
+<ul class="text-soft-gray font-body-md space-y-2">
+<li class="">React.js &amp; Next.js</li>
+<li class="">Angular</li>
+<li class="">Tailwind CSS</li>
+<li class="">TypeScript</li>
+</ul>
+</div>
+</div>
+<div class="tilt-card tilt-reset">
+<div class="tilt-card-inner bg-surface-container/50 p-6 rounded-xl border border-glass-border hover:border-electric-blue transition-colors duration-300 h-full">
+<h3 class="font-headline-lg-mobile text-body-lg text-on-surface mb-4">Backend</h3>
+<ul class="text-soft-gray font-body-md space-y-2">
+<li class="">Node.js</li>
+<li class="">Express.js</li>
+<li class="">Python / Django</li>
+<li class="">GraphQL</li>
+</ul>
+</div>
+</div>
+<div class="tilt-card tilt-reset">
+<div class="tilt-card-inner bg-surface-container/50 p-6 rounded-xl border border-glass-border hover:border-electric-blue transition-colors duration-300 h-full">
+<h3 class="font-headline-lg-mobile text-body-lg text-on-surface mb-4">Database</h3>
+<ul class="text-soft-gray font-body-md space-y-2">
+<li class="">MongoDB</li>
+<li class="">PostgreSQL</li>
+<li class="">Redis</li>
+<li class="">Firebase</li>
+</ul>
+</div>
+</div>
+<div class="tilt-card tilt-reset">
+<div class="tilt-card-inner bg-surface-container/50 p-6 rounded-xl border border-glass-border hover:border-electric-blue transition-colors duration-300 h-full">
+<h3 class="font-headline-lg-mobile text-body-lg text-on-surface mb-4">AI / Tools</h3>
+<ul class="text-soft-gray font-body-md space-y-2">
+<li class="">TensorFlow</li>
+<li class="">OpenAI API</li>
+<li class="">Docker</li>
+<li class="">Git / CI/CD</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Projects Section -->
+<section class="min-h-[120vh] relative" id="projects">
+<div class="sticky top-32 h-[calc(100vh-12rem)] w-full flex items-center justify-center transform transition-transform duration-500">
+<div class="tilt-card w-full max-w-5xl h-full tilt-reset" style="--rotate-x: 0deg; --rotate-y: 0deg;">
+<div class="tilt-card-inner glass-card w-full h-full p-8 md:p-16 rounded-3xl overflow-y-auto flex flex-col justify-center shadow-2xl">
+<h2 class="font-display-xl text-headline-lg text-on-surface mb-6">Featured Projects</h2>
+<p class="font-label-caps text-label-caps text-electric-blue mb-8 tracking-[0.2em]">SCALABLE &amp; INTELLIGENT</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="tilt-card tilt-reset">
+<div class="tilt-card-inner group relative overflow-hidden rounded-xl border border-glass-border bg-surface-container/30 aspect-video flex flex-col justify-end p-6 hover:border-electric-blue transition-all duration-300 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-deep-obsidian via-deep-obsidian/50 to-transparent z-0"></div>
+<div class="relative z-10">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">AI Content Generator</h3>
+<p class="text-soft-gray font-body-md mb-4 line-clamp-2">A full-stack application leveraging OpenAI to generate rich content with a MERN stack backend.</p>
+<span class="font-label-caps text-[10px] px-3 py-1 border border-glass-border rounded-full text-primary">React • Node • OpenAI</span>
+</div>
+</div>
+</div>
+<div class="tilt-card tilt-reset">
+<div class="tilt-card-inner group relative overflow-hidden rounded-xl border border-glass-border bg-surface-container/30 aspect-video flex flex-col justify-end p-6 hover:border-electric-blue transition-all duration-300 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-deep-obsidian via-deep-obsidian/50 to-transparent z-0"></div>
+<div class="relative z-10">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">E-Commerce Analytics</h3>
+<p class="text-soft-gray font-body-md mb-4 line-clamp-2">Real-time dashboard built with Angular and Python, processing thousands of transactions seamlessly.</p>
+<span class="font-label-caps text-[10px] px-3 py-1 border border-glass-border rounded-full text-primary">Angular • Python • Redis</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Experience Section -->
+<section class="min-h-[120vh] relative" id="experience">
+<div class="sticky top-36 h-[calc(100vh-12rem)] w-full flex items-center justify-center transform transition-transform duration-500">
+<div class="tilt-card w-full max-w-5xl h-full tilt-reset">
+<div class="tilt-card-inner glass-card w-full h-full p-8 md:p-16 rounded-3xl overflow-y-auto flex flex-col justify-center shadow-2xl">
+<h2 class="font-display-xl text-headline-lg text-on-surface mb-6">Experience</h2>
+<p class="font-label-caps text-label-caps text-electric-blue mb-8 tracking-[0.2em]">PROFESSIONAL JOURNEY</p>
+<div class="relative space-y-24 border-l border-glass-border pl-12 ml-2 py-10" id="experience-timeline">
+<!-- Animated Indicator -->
+<div class="absolute left-[-5px] top-0 w-[9px] h-[9px] rounded-full bg-electric-blue shadow-[0_0_15px_rgba(20,40,160,1)] z-20 pointer-events-none" id="experience-indicator"></div>
+<div class="experience-item relative" data-index="0">
+<h3 class="font-headline-lg-mobile text-body-lg text-on-surface font-bold mb-1">Full Stack Developer Intern</h3>
+<p class="font-label-caps text-label-caps text-soft-gray mb-4">Tech Solutions Inc. // 2023 - Present</p>
+<p class="text-soft-gray font-body-md max-w-2xl">Developed and maintained RESTful APIs using Node.js and Express. Integrated machine learning models into the main web application, improving user engagement by 25%. Collaborated closely with the design team to ensure pixel-perfect frontend implementation.</p>
+</div>
+<div class="experience-item relative" data-index="1">
+<h3 class="font-headline-lg-mobile text-body-lg text-on-surface font-bold mb-1">Freelance Web Developer</h3>
+<p class="font-label-caps text-label-caps text-soft-gray mb-4">Self-Employed // 2021 - 2023</p>
+<p class="text-soft-gray font-body-md max-w-2xl">Built custom MERN and MEAN stack websites for local businesses. Handled everything from UI/UX design to deployment and database management, ensuring highly performant and scalable end products.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Education Section -->
+<section class="min-h-[120vh] relative" id="education">
+<div class="sticky top-40 h-[calc(100vh-12rem)] w-full flex items-center justify-center transform transition-transform duration-500">
+<div class="tilt-card w-full max-w-5xl h-full tilt-reset">
+<div class="tilt-card-inner glass-card w-full h-full p-8 md:p-16 rounded-3xl overflow-y-auto flex flex-col justify-center shadow-2xl">
+<h2 class="font-display-xl text-headline-lg text-on-surface mb-6">Education</h2>
+<p class="font-label-caps text-label-caps text-electric-blue mb-8 tracking-[0.2em]">ACADEMIC BACKGROUND</p>
+<div class="space-y-8">
+<div class="tilt-card tilt-reset">
+<div class="tilt-card-inner bg-surface-container/30 p-8 rounded-xl border border-glass-border">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Bachelor of Technology in Information Technology</h3>
+<p class="text-soft-gray font-body-lg mb-4">University of Technology // 2021 - 2025</p>
+<p class="text-soft-gray font-body-md max-w-2xl">Focusing on advanced algorithms, software architecture, and artificial intelligence. Consistently maintaining a high GPA and leading the technology club.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="min-h-[120vh] relative" id="contact">
+<div class="sticky top-44 h-[calc(100vh-12rem)] w-full flex items-center justify-center transform transition-transform duration-500">
+<div class="tilt-card w-full max-w-5xl h-full tilt-reset">
+<div class="tilt-card-inner glass-card w-full h-full p-8 md:p-16 rounded-3xl overflow-y-auto flex flex-col justify-center shadow-2xl text-center">
+<h2 class="font-display-xl text-headline-lg text-on-surface mb-6">Get In Touch</h2>
+<p class="font-label-caps text-label-caps text-electric-blue mb-12 tracking-[0.2em]">LET'S BUILD SOMETHING GREAT</p>
+<div class="max-w-xl mx-auto space-y-8">
+<p class="font-body-lg text-on-surface">Available for collaborations, internships, and freelance projects. I'm always open to discussing new ideas and opportunities.</p>
+<div class="flex flex-col md:flex-row gap-6 justify-center">
+<a class="bg-electric-blue text-on-surface px-12 py-5 rounded-full font-label-caps hover:bg-on-surface hover:text-background transition-all duration-500" href="mailto:hello@mcode.dev">Send an Email</a>
+<a class="glass-card text-on-surface px-12 py-5 rounded-full font-label-caps hover:border-electric-blue hover:text-electric-blue transition-all duration-500" href="#">Follow on LinkedIn</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="bg-deep-obsidian full-width py-section-gap border-t border-glass-border relative z-10">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="font-headline-lg text-headline-lg text-on-surface">
+                FSDEV_PORTFOLIO
+            </div>
+<div class="flex gap-6 font-body-md text-body-md">
+<a class="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100" href="#">GitHub</a>
+<a class="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100" href="#">LinkedIn</a>
+<a class="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100" href="#">Twitter</a>
+<a class="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100" href="#">Email</a>
+</div>
+<div class="font-body-md text-body-md text-soft-gray">
+                © 2024 PORTFOLIO. BUILT FOR THE FUTURE.
+            </div>
+</div>
+</footer>
+<script>
+        // Reveal Animations
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+            
+            // Experience Timeline logic
+            const timeline = document.getElementById('experience-timeline');
+            const indicator = document.getElementById('experience-indicator');
+            const expItems = document.querySelectorAll('.experience-item');
+            
+            if (timeline && indicator) {
+                const rect = timeline.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                // Calculate progress within the timeline container
+                // We want progress to be 0 when timeline starts appearing and 1 when it's fully scrolled
+                let progress = (windowHeight - rect.top) / (windowHeight + rect.height);
+                progress = Math.max(0, Math.min(1, progress));
+                
+                // Adjust progress calculation to be more localized to when the section is in view
+                const sectionProgress = (windowHeight/2 - rect.top) / rect.height;
+                const safeProgress = Math.max(0, Math.min(1, sectionProgress));
+                
+                indicator.style.top = `${safeProgress * 100}%`;
+                
+                expItems.forEach(item => {
+                    const itemRect = item.getBoundingClientRect();
+                    // If the indicator (at fixed center relative to timeline) passes the item's top
+                    if (itemRect.top < windowHeight * 0.75) {
+                        item.classList.add('revealed');
+                    }
+                });
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); // Trigger on load
+
+        // Particle Network
+        const canvas = document.getElementById('particle-network');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = document.documentElement.scrollHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        window.addEventListener('mousemove', function(e) {
+            mouse.x = e.x;
+            mouse.y = e.y + window.scrollY;
+        });
+        window.addEventListener('mouseout', function() {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(20, 40, 160, 0.8)';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            
+            const viewportTop = window.scrollY;
+            const viewportBottom = viewportTop + window.innerHeight;
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                
+                // Only draw visible particles for performance
+                if (particles[i].y > viewportTop - 100 && particles[i].y < viewportBottom + 100) {
+                    particles[i].draw();
+                    
+                    if (mouse.x !== null && mouse.y !== null) {
+                        const dx = particles[i].x - mouse.x;
+                        const dy = particles[i].y - mouse.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 200) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(mouse.x, mouse.y);
+                            ctx.strokeStyle = `rgba(20, 40, 160, ${0.6 * (1 - dist/200)})`;
+                            ctx.lineWidth = 1.5;
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(20, 40, 160, ${0.6 * (1 - dist/150)})`;
+                            ctx.lineWidth = 1.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Universal 3D Tilt Hover Implementation
+        function initTilt() {
+            const tiltCards = document.querySelectorAll('.tilt-card');
+            
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    // Max rotation degree
+                    const maxRotate = 5; 
+                    
+                    const rotateX = ((y - centerY) / centerY) * -maxRotate;
+                    const rotateY = ((x - centerX) / centerX) * maxRotate;
+                    
+                    card.classList.remove('tilt-reset');
+                    card.style.setProperty('--rotate-x', `${rotateX}deg`);
+                    card.style.setProperty('--rotate-y', `${rotateY}deg`);
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.classList.add('tilt-reset');
+                    card.style.setProperty('--rotate-x', '0deg');
+                    card.style.setProperty('--rotate-y', '0deg');
+                });
+            });
+        }
+        initTilt();
+        
+        // Handle anchor clicks for custom behavior if needed, although scroll-behavior: smooth handles most.
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="dark scroll-smooth" lang="en" style=""><head></head><body class="font-body-md antialiased overflow-hidden selection:bg-electric-blue selection:text-white"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Portfolio | AI &amp; Full-Stack Developer</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Sora:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols (Mandatory) -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#bcc3ff",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "electric-blue": "#1428A0",
+                    "surface-variant": "#353534",
+                    "surface-container-lowest": "#0e0e0e",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "surface": "#131313",
+                    "inverse-primary": "#4152c5",
+                    "surface-container-high": "#2a2a2a",
+                    "surface-bright": "#393939",
+                    "primary": "#bcc3ff",
+                    "on-primary-fixed": "#000d60",
+                    "on-tertiary": "#2f3131",
+                    "primary-fixed-dim": "#bcc3ff",
+                    "tertiary-fixed": "#e2e2e2",
+                    "on-primary-fixed-variant": "#2638ad",
+                    "deep-obsidian": "#080808",
+                    "on-secondary-fixed-variant": "#474747",
+                    "error": "#ffb4ab",
+                    "on-secondary-fixed": "#1b1b1b",
+                    "background": "#131313",
+                    "secondary-fixed-dim": "#c6c6c6",
+                    "inverse-surface": "#e5e2e1",
+                    "outline-variant": "#454653",
+                    "on-background": "#e5e2e1",
+                    "surface-container": "#201f1f",
+                    "surface-container-low": "#1c1b1b",
+                    "tertiary": "#c6c6c7",
+                    "on-error": "#690005",
+                    "primary-fixed": "#dfe0ff",
+                    "on-secondary-container": "#b5b5b5",
+                    "secondary-container": "#474747",
+                    "on-tertiary-container": "#a3a4a4",
+                    "on-primary-container": "#8f9cff",
+                    "on-primary": "#011a97",
+                    "inverse-on-surface": "#313030",
+                    "secondary-fixed": "#e2e2e2",
+                    "on-surface-variant": "#c5c5d5",
+                    "soft-gray": "#A1A1A6",
+                    "surface-container-highest": "#353534",
+                    "glass-border": "rgba(255, 255, 255, 0.12)",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#e5e2e1",
+                    "outline": "#8f8f9f",
+                    "surface-dim": "#131313",
+                    "tertiary-container": "#383a3a",
+                    "secondary": "#c6c6c6",
+                    "on-secondary": "#303030",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "error-container": "#93000a",
+                    "primary-container": "#1428a0"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "24px",
+                    "margin-desktop": "80px",
+                    "container-max": "1440px",
+                    "gutter": "24px",
+                    "section-gap": "160px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Sora", "sans-serif"],
+                    "display-xl-mobile": ["Sora", "sans-serif"],
+                    "body-lg": ["Inter", "sans-serif"],
+                    "body-md": ["Inter", "sans-serif"],
+                    "headline-lg-mobile": ["Sora", "sans-serif"],
+                    "display-xl": ["Sora", "sans-serif"],
+                    "label-caps": ["Inter", "sans-serif"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom Styles for Cinematic Feel */
+        body {
+            background-color: #000000; /* Pure black base */
+            color: #FFFFFF;
+        }
+        
+        .glass-panel {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            box-shadow: 0 0 20px rgba(20, 40, 160, 0.3);
+            border-color: rgba(20, 40, 160, 0.5);
+        }
+
+        /* Snap Scroll Container */
+        .snap-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .snap-section {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Reveal Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .reveal-element.active {
+            animation: fadeInUp 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+
+        /* Scroll Pulse */
+        @keyframes pulse-scroll {
+            0% { transform: scaleY(1); opacity: 0.5; }
+            50% { transform: scaleY(1.5); opacity: 1; }
+            100% { transform: scaleY(1); opacity: 0.5; }
+        }
+        .scroll-line {
+            animation: pulse-scroll 2s infinite ease-in-out;
+            transform-origin: top;
+        }
+
+        /* Button Magnetic Effect */
+        .magnetic-btn {
+            display: inline-block;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+<!-- Particle Network Canvas Background -->
+<canvas class="fixed inset-0 pointer-events-none z-0 opacity-100" height="1024" id="particle-network" width="1280"></canvas>
+<!-- Interactions & Animations -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Particle Network Logic
+            const canvas = document.getElementById('particle-network');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const mouse = { x: null, y: null, radius: 150 };
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 1.5;
+                    this.vy = (Math.random() - 0.5) * 1.5;
+                    this.radius = Math.random() * 2.0 + 1.0;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                    if (this.y < 0 || this.y > height) this.vy = -this.vy;
+
+                    if (mouse.x != null && mouse.y != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < mouse.radius) {
+                            const forceDirectionX = dx / distance;
+                            const forceDirectionY = dy / distance;
+                            const force = (mouse.radius - distance) / mouse.radius;
+                            const pushX = forceDirectionX * force * 1.5;
+                            const pushY = forceDirectionY * force * 1.5;
+                            this.x -= pushX;
+                            this.y -= pushY;
+                        }
+                    }
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(20, 40, 160, 0.9)'; // electric-blue with high opacity
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const numberOfParticles = Math.floor((width * height) / 12000);
+                for (let i = 0; i < numberOfParticles; i++) {
+                    particles.push(new Particle());
+                }
+            }
+            initParticles();
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, width, height);
+                
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                    
+                    for (let j = i; j < particles.length; j++) {
+                        let dx = particles[i].x - particles[j].x;
+                        let dy = particles[i].y - particles[j].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 120) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(20, 40, 160, ${0.7 - distance/170})`; // electric-blue connection
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    if (mouse.x != null && mouse.y != null) {
+                        let dx = particles[i].x - mouse.x;
+                        let dy = particles[i].y - mouse.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 180) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(188, 195, 255, ${0.8 - distance/225})`; // magnetic line
+                            ctx.lineWidth = 1.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(mouse.x, mouse.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.x;
+                mouse.y = e.y;
+            });
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+        });
+    </script>
+</body></html>
