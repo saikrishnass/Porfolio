@@ -10,7 +10,6 @@ const Footer = ({ onNavigate }) => {
         <div className="flex gap-6 font-body-md text-sm">
           <a className="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a className="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100" href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a className="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100" href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
           <button
             className="text-soft-gray hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100 cursor-pointer"
             onClick={() => onNavigate('/admin')}
