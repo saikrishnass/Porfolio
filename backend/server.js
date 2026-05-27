@@ -20,6 +20,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/api/auth', require('./routes/adminRoutes'));
 app.use('/api', require('./routes/portfolioRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
+app.use('/api/visits', require('./routes/visitRoutes'));
 
 // Root endpoint status check
 app.get('/', (req, res) => {

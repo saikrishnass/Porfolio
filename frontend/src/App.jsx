@@ -84,6 +84,16 @@ const App = () => {
 
   useEffect(() => {
     fetchPortfolioData();
+
+    // Track public portfolio visit silently on load
+    if (window.location.pathname === '/' || window.location.pathname === '') {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      axios.post(`${API_BASE_URL}/api/visits`, {}, {
+        headers: {
+          'Referer': document.referrer || 'Direct'
+        }
+      }).catch(err => console.error('Silent visitor tracking failed:', err));
+    }
   }, []);
 
   // Handle Admin Logged In

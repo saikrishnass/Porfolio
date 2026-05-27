@@ -11,7 +11,9 @@ import {
   Plus, 
   Check, 
   Edit3,
-  X
+  X,
+  Eye,
+  Globe
 } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -24,6 +26,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
   const [projects, setProjects] = useState([]);
   const [experience, setExperience] = useState([]);
   const [education, setEducation] = useState([]);
+  const [stats, setStats] = useState({ totalVisits: 0, uniqueVisitors: 0, latestVisits: [] });
 
   // Form states
   const [skillForm, setSkillForm] = useState({ name: '', category: 'Frontend' });
@@ -46,12 +49,13 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const [msgRes, skillRes, projRes, expRes, eduRes] = await Promise.all([
+      const [msgRes, skillRes, projRes, expRes, eduRes, statsRes] = await Promise.all([
         axios.get(`${API_BASE_URL}/api/messages`, axiosConfig),
         axios.get(`${API_BASE_URL}/api/skills`),
         axios.get(`${API_BASE_URL}/api/projects`),
         axios.get(`${API_BASE_URL}/api/experience`),
-        axios.get(`${API_BASE_URL}/api/education`)
+        axios.get(`${API_BASE_URL}/api/education`),
+        axios.get(`${API_BASE_URL}/api/visits/stats`, axiosConfig)
       ]);
 
       setMessages(msgRes.data);
@@ -59,6 +63,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
       setProjects(projRes.data);
       setExperience(expRes.data);
       setEducation(eduRes.data);
+      setStats(statsRes.data);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
       showFeedback('error', 'Failed to load panel data.');
@@ -283,6 +288,7 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
             
             <nav className="flex flex-col gap-2 font-label-caps text-xs">
               {[
+                { id: 'analytics', label: 'Visitor Analytics', count: stats.totalVisits, icon: <Eye size={16} /> },
                 { id: 'messages', label: 'Messages', count: messages.length, icon: <Mail size={16} /> },
                 { id: 'skills', label: 'Skills Manager', icon: <Terminal size={16} /> },
                 { id: 'projects', label: 'Projects Manager', icon: <FolderGit2 size={16} /> },
@@ -835,6 +841,67 @@ const Dashboard = ({ token, username, onLogout, refreshData }) => {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* --- ANALYTICS TAB --- */}
+              {activeTab === 'analytics' && (
+                <div>
+                  <h2 className="text-xl font-bold font-headline-lg text-on-surface mb-6 border-b border-glass-border pb-3">
+                    Visitor Analytics
+                  </h2>
+                  
+                  {/* Stats Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                    <div className="bg-surface-container/30 border border-glass-border p-6 rounded-2xl flex flex-col justify-center">
+                      <div className="text-soft-gray text-xs font-label-caps tracking-widest uppercase mb-1">Total Hits</div>
+                      <div className="text-on-surface font-headline-lg text-3xl font-bold flex items-center gap-3">
+                        <Eye className="text-electric-blue" size={24} />
+                        <span>{stats.totalVisits}</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-surface-container/30 border border-glass-border p-6 rounded-2xl flex flex-col justify-center">
+                      <div className="text-soft-gray text-xs font-label-caps tracking-widest uppercase mb-1">Unique Visitors</div>
+                      <div className="text-on-surface font-headline-lg text-3xl font-bold flex items-center gap-3">
+                        <Globe className="text-primary" size={24} />
+                        <span>{stats.uniqueVisitors}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 className="text-sm font-semibold text-on-surface mb-4 uppercase tracking-wider">Latest 10 Visits</h3>
+                  {stats.latestVisits.length === 0 ? (
+                    <p className="text-soft-gray text-xs italic py-4">No visits logged yet.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {stats.latestVisits.map((visit) => {
+                        const date = new Date(visit.createdAt).toLocaleString();
+                        const flag = visit.countryCode ? ` ${visit.countryCode.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397))}` : '';
+                        
+                        return (
+                          <div key={visit._id} className="bg-surface-container/20 border border-glass-border p-4 rounded-xl flex flex-col sm:flex-row justify-between gap-3 text-left">
+                            <div className="space-y-1">
+                              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-on-surface">
+                                <span className="text-primary">{visit.city}, {visit.region}, {visit.country}{flag}</span>
+                                <span className="text-[10px] text-soft-gray bg-background border border-glass-border px-2 py-0.5 rounded-full">{visit.ip}</span>
+                              </div>
+                              <div className="text-[11px] text-soft-gray">
+                                <span className="font-semibold text-on-surface">Device:</span> {visit.userAgent}
+                              </div>
+                              <div className="text-[11px] text-soft-gray">
+                                <span className="font-semibold text-on-surface">Network:</span> {visit.isp}
+                              </div>
+                            </div>
+                            <div className="text-right sm:self-center">
+                              <div className="text-[10px] text-soft-gray">{date}</div>
+                              <div className="text-[9px] text-electric-blue mt-1">Ref: {visit.referer}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

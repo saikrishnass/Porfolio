@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Reveal from './Reveal';
-import { Send, AlertCircle, X } from 'lucide-react';
+import { Send, AlertCircle, X, Loader2 } from 'lucide-react';
 
 const Contact = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,28 +12,56 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       setStatus({ type: 'error', text: 'All fields are required.' });
       return;
     }
 
-    // Build Gmail compose URL with pre-filled fields
-    const to = encodeURIComponent('saikrishnapasikanti@gmail.com');
-    const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
-    const body = encodeURIComponent(
-      `Hi Saikrishna,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    );
-    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
+    setStatus({ type: 'loading', text: 'Sending details and launching Gmail...' });
 
-    // Open Gmail compose in a new tab
-    window.open(gmailComposeUrl, '_blank');
+    try {
+      // POST message details to backend (saves to DB + triggers Telegram bot)
+      await axios.post('http://localhost:5000/api/messages', formData);
 
-    // Reset form and close modal
-    setFormData({ name: '', email: '', message: '' });
-    setStatus({ type: '', text: '' });
-    setIsModalOpen(false);
+      // Build Gmail compose URL with pre-filled fields
+      const to = encodeURIComponent('saikrishnapasikanti@gmail.com');
+      const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
+      const body = encodeURIComponent(
+        `Hi Saikrishna,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      );
+      const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
+
+      // Open Gmail compose in a new tab
+      window.open(gmailComposeUrl, '_blank');
+
+      // Reset form and close modal on success
+      setFormData({ name: '', email: '', message: '' });
+      setStatus({ type: '', text: '' });
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Submission failed:', error);
+      setStatus({ 
+        type: 'error', 
+        text: 'Failed to send details. Opening Gmail fallback compose...' 
+      });
+
+      // Fallback: Still open Gmail compose even if backend API is temporarily offline
+      setTimeout(() => {
+        const to = encodeURIComponent('saikrishnapasikanti@gmail.com');
+        const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
+        const body = encodeURIComponent(
+          `Hi Saikrishna,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+        );
+        const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
+        window.open(gmailComposeUrl, '_blank');
+        
+        setFormData({ name: '', email: '', message: '' });
+        setStatus({ type: '', text: '' });
+        setIsModalOpen(false);
+      }, 1500);
+    }
   };
 
   return (
@@ -128,18 +157,36 @@ const Contact = () => {
               </div>
 
               {status.text && (
-                <div className="p-3 rounded-xl flex items-center gap-2 text-xs border bg-red-950/20 text-red-400 border-red-800/30">
-                  <AlertCircle size={16} />
+                <div className={`p-3 rounded-xl flex items-center gap-2 text-xs border ${
+                  status.type === 'loading'
+                    ? 'bg-blue-950/20 text-blue-400 border-blue-800/30'
+                    : 'bg-red-950/20 text-red-400 border-red-800/30'
+                }`}>
+                  {status.type === 'loading' ? (
+                    <Loader2 size={16} className="animate-spin text-electric-blue" />
+                  ) : (
+                    <AlertCircle size={16} />
+                  )}
                   <span>{status.text}</span>
                 </div>
               )}
 
               <button 
                 type="submit" 
-                className="w-full bg-on-surface text-background font-label-caps font-bold py-4 rounded-xl hover:bg-electric-blue hover:text-on-surface transition-all flex items-center justify-center gap-2 cursor-pointer"
+                disabled={status.type === 'loading'}
+                className="w-full bg-on-surface text-background font-label-caps font-bold py-4 rounded-xl hover:bg-electric-blue hover:text-on-surface transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span>Send via Gmail</span>
-                <Send size={16} />
+                {status.type === 'loading' ? (
+                  <>
+                    <span>Sending...</span>
+                    <Loader2 size={16} className="animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    <span>Send via Gmail</span>
+                    <Send size={16} />
+                  </>
+                )}
               </button>
             </form>
           </div>
