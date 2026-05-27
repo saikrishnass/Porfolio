@@ -13,6 +13,19 @@ const getClientIp = (req) => {
   return ip;
 };
 
+// Helper to check if IP is private or local loopback
+const isPrivateIp = (ip) => {
+  if (!ip) return true;
+  return (
+    ip === '::1' ||
+    ip === '127.0.0.1' ||
+    ip === 'localhost' ||
+    ip.startsWith('10.') ||
+    ip.startsWith('192.168.') ||
+    (ip.startsWith('172.') && parseInt(ip.split('.')[1]) >= 16 && parseInt(ip.split('.')[1]) <= 31)
+  );
+};
+
 // Helper to parse User Agent into human readable device description
 const parseUserAgent = (ua) => {
   if (!ua || ua === 'Unknown') return 'Unknown Device';
@@ -42,8 +55,8 @@ const recordVisit = async (req, res) => {
   const userAgent = req.headers['user-agent'] || 'Unknown';
   const referer = req.headers['referer'] || 'Direct';
 
-  // For local testing (127.0.0.1 or ::1), we can query ipify to get the user's outbound public IP
-  if (!ip || ip === '::1' || ip === '127.0.0.1' || ip === 'localhost') {
+  // For private local balancer IPs (Render, AWS) or local testing, query public outbound IP
+  if (isPrivateIp(ip)) {
     try {
       const ipifyRes = await fetch('https://api.ipify.org?format=json');
       const ipifyData = await ipifyRes.json();
@@ -51,7 +64,7 @@ const recordVisit = async (req, res) => {
         ip = ipifyData.ip;
       }
     } catch (e) {
-      console.warn('Could not fetch outbound public IP for local testing:', e.message);
+      console.warn('Could not fetch outbound public IP for private/local connection:', e.message);
     }
   }
 
@@ -63,22 +76,42 @@ const recordVisit = async (req, res) => {
     isp: 'Unknown'
   };
 
-  // If we have a valid public IP, perform GeoIP lookup
-  if (ip && ip !== '::1' && ip !== '127.0.0.1') {
+  // Perform GeoIP lookup if we resolved a valid public IP
+  if (ip && !isPrivateIp(ip)) {
+    // Try HTTPS-native FreeIPAPI first (datacenter safe, SSL certified)
     try {
-      const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
-      const geoJson = await geoRes.json();
-      if (geoJson && geoJson.status === 'success') {
+      const geoRes = await fetch(`https://freeipapi.com/api/json/${ip}`);
+      if (geoRes.ok) {
+        const geoJson = await geoRes.json();
         geoData = {
-          city: geoJson.city || 'Unknown',
+          city: geoJson.cityName || 'Unknown',
           region: geoJson.regionName || 'Unknown',
-          country: geoJson.country || 'Unknown',
+          country: geoJson.countryName || 'Unknown',
           countryCode: geoJson.countryCode || '',
-          isp: geoJson.isp || 'Unknown'
+          isp: 'Outbound ISP'
         };
+      } else {
+        throw new Error(`HTTP error status ${geoRes.status}`);
       }
     } catch (e) {
-      console.error('GeoIP lookup failed:', e.message);
+      console.warn('Primary FreeIPAPI lookup failed, trying fallback...', e.message);
+      
+      // Fallback to IP-API (HTTP)
+      try {
+        const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
+        const geoJson = await geoRes.json();
+        if (geoJson && geoJson.status === 'success') {
+          geoData = {
+            city: geoJson.city || 'Unknown',
+            region: geoJson.regionName || 'Unknown',
+            country: geoJson.country || 'Unknown',
+            countryCode: geoJson.countryCode || '',
+            isp: geoJson.isp || 'Unknown'
+          };
+        }
+      } catch (fallbackErr) {
+        console.error('All GeoIP lookup endpoints failed:', fallbackErr.message);
+      }
     }
   }
 

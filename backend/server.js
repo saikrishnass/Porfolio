@@ -11,6 +11,9 @@ connectDB();
 
 const app = express();
 
+// Trust cloud reverse proxies (Render, Vercel, AWS, etc.)
+app.set('trust proxy', true);
+
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
