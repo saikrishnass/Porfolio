@@ -23,7 +23,8 @@ const Contact = () => {
 
     try {
       // POST message details to backend (saves to DB + triggers Telegram bot)
-      await axios.post('http://localhost:5000/api/messages', formData);
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      await axios.post(`${API_BASE_URL}/api/messages`, formData);
 
       // Build Gmail compose URL with pre-filled fields
       const to = encodeURIComponent('saikrishnapasikanti@gmail.com');
